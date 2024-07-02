@@ -4,7 +4,7 @@ import catchAsync from "../utils/catchAsync.ts";
 import authValidation from "../middleware/auth.validation.ts";
 import services from "../services/index.ts";
 import bcrypt from "bcrypt";
-const create = catchAsync(async (req: { body: any }, res: any): Promise<void> => {
+const create = catchAsync(async (req: { body: any }, res: any) => {
     const data: any = authValidation.userCreation(req.body)
     if (data.error) {
         res.status(500).send({ message: data.error })
@@ -13,7 +13,7 @@ const create = catchAsync(async (req: { body: any }, res: any): Promise<void> =>
         const inviteToken = services.tokenServices.inviteTokenGenearation(req.body)
         data.value.inviteToken = inviteToken
         const newSubAdmin = await Auth.create(data.value)
-        const permission = await Permission.create({
+        await Permission.create({
             user_id: newSubAdmin._id,
             role_create: req.body.permission.role_create,
             role_update: req.body.permission.role_update,
@@ -34,7 +34,7 @@ const passwordSetup = catchAsync(async (req: any, res: any) => {
             const data = await Auth.findOne({ inviteToken: req.params.token })
             res.status(201).json({ message: "token validation successful", data })
         }
-    }else{
+    } else {
         res.status(400).json({ message: "link already verified" })
     }
 })
@@ -43,7 +43,7 @@ const passwordInitilize = catchAsync(async (req: any, res: any) => {
     const password = await bcrypt.hash(req.body.password, 10)
     await Auth.findOneAndUpdate({ inviteToken: req.params.token }, { password });
     const result = await Auth.findOne({ inviteToken: req.params.token })
-    res.status(201).json({message:"Password Successfully updated" ,result})
+    res.status(201).json({ message: "Password Successfully updated", result })
 })
 
 const getSubUsers = catchAsync(async (req: { body: any }, res: any): Promise<void> => {
