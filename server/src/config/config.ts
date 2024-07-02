@@ -7,7 +7,7 @@ interface EnvKeys{
     PORT:number,
     MONGODB_URL:string,
 }
-dotenv.config({ path: path.join(__dirname, '../../../.env') })
+dotenv.config({ path: path.join(__dirname, '../../.env') })
 const envVarsSchema = joi.object()
     .keys({
         BASE_URL:joi.string().required(),
