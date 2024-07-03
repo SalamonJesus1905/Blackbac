@@ -1,7 +1,7 @@
-import permissionServices from "./permission.services.ts";
-import tokenServices from "./token.services.ts";
-import userServices from "./user.services.ts";
-import mailServices from "./mail.services.ts";
+import permissionServices from "./permission.services";
+import tokenServices from "./token.services";
+import userServices from "./user.services";
+import mailServices from "./mail.services";
 
 export default {
     permissionServices,

@@ -1,7 +1,7 @@
 import express from 'express';
-import authRoute from "./auth.route.ts";
-import roleRoute from "./role.route.ts";
-import adminRoute from "./admin.route.ts";
+import authRoute from "./auth.route";
+import roleRoute from "./role.route";
+import adminRoute from "./admin.route";
 
 const router = express.Router()
 

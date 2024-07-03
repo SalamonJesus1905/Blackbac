@@ -1,4 +1,4 @@
-import Role from "../models/role.ts";
+import Role from "../models/role";
 const create = async (req: { body: any }, res:any):Promise<void>=>{
     const data:any =  await Role.create(req.body)
     res.status(200).send(data)  

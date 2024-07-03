@@ -1,7 +1,7 @@
 import express from 'express';
-import routes from './routes/index.ts';
+import routes from './routes/index';
 import bodyParser from 'body-parser';
-import errorHandler from './validations/globalErrorHandling.ts';
+import errorHandler from './validations/globalErrorHandling';
 const app = express();
 
 app.use(bodyParser.json());

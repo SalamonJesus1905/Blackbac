@@ -1,4 +1,4 @@
-import config from "../config/config.ts"
+import config from "../config/config"
 import jwt from "jsonwebtoken";
 const validToken = (req:any, res:any, next:any) => {
     const userToken = req.headers.authorization.replace('Bearer','').trim();

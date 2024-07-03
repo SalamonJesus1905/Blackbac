@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import config from '../config/config.ts';
+import config from '../config/config';
 import fs from 'fs';
 import path from 'path';
 const accountCreated = async (toUser: any) => {

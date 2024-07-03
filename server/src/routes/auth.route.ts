@@ -1,7 +1,7 @@
 import express from 'express';
-import controllers from '../controllers/index.ts';
-import schemaValidate from '../middleware/schema.validate.ts'
-import authValidation from '../middleware/auth.validation.ts';
+import controllers from '../controllers/index';
+import schemaValidate from '../middleware/schema.validate'
+import authValidation from '../middleware/auth.validation';
 const router: any = express.Router()
 
 router.post('/register', schemaValidate(authValidation.register), controllers.authController.register)

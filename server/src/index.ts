@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import app from "./app.ts";
-import config from "./config/config.ts";
+import app from "./app";
+import config from "./config/config";
 
 const superDB = ():void =>{
      mongoose.connect('mongodb://localhost:27017/blubase').then(() =>{

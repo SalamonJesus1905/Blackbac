@@ -1,5 +1,5 @@
 import express from 'express';
-import controllers from '../controllers/index.ts';
+import controllers from '../controllers/index';
 const router:any = express.Router()
 
 router.post('/create',controllers.roleController.create)

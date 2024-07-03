@@ -1,8 +1,8 @@
-import Auth from "../models/auth.ts";
-import Permission from "../models/permission.ts";
-import catchAsync from "../utils/catchAsync.ts";
-import authValidation from "../middleware/auth.validation.ts";
-import services from "../services/index.ts";
+import Auth from "../models/auth";
+import Permission from "../models/permission";
+import catchAsync from "../utils/catchAsync";
+import authValidation from "../middleware/auth.validation";
+import services from "../services/index";
 import bcrypt from "bcrypt";
 const create = catchAsync(async (req: { body: any }, res: any) => {
     const data: any = authValidation.userCreation(req.body)

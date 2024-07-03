@@ -1,4 +1,4 @@
-import Auth from "../models/auth.ts"
+import Auth from "../models/auth"
 const roleAdmin = async(req:any, res:any, next:any): Promise<void>=>{
     const token:string = req.headers.authorization.replace('Bearer','').trim()
     const data:any = await Auth.findOne({token})

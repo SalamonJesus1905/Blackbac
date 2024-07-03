@@ -1,7 +1,7 @@
 import express from 'express';
-import controllers from '../controllers/index.ts';
-import roleValidation from '../middleware/role.validation.ts';
-import tokenValidation from '../middleware/token.validation.ts';
+import controllers from '../controllers/index';
+import roleValidation from '../middleware/role.validation';
+import tokenValidation from '../middleware/token.validation';
 const router: any = express.Router()
 
 //admin index

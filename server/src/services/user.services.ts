@@ -1,4 +1,4 @@
-import Auth from "../models/auth.ts"
+import Auth from "../models/auth"
 
 const create = async(data: any)=>{
     const newUser = await Auth.create(data)

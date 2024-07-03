@@ -1,5 +1,5 @@
-import catchAsync from "../utils/catchAsync.ts";
-import services from "../services/index.ts"
+import catchAsync from "../utils/catchAsync";
+import services from "../services/index"
 import bcrypt from 'bcrypt';
 import { AnyArray } from "mongoose";
 const register = catchAsync(async (req: { body: any }, res: any): Promise<void> => {
