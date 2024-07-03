@@ -10,10 +10,10 @@ const create = catchAsync(async (req: { body: any }, res: any) => {
         res.status(500).send({ message: data.error })
     }
     else {
-        const inviteToken = services.tokenServices.inviteTokenGenearation(req.body)
+        const inviteToken = services.tokenServices.inviteTokenGenearation(req.body._id)
         data.value.inviteToken = inviteToken
         const newSubAdmin = await Auth.create(data.value)
-        await Permission.create({
+        const permission = await Permission.create({
             user_id: newSubAdmin._id,
             role_create: req.body.permission.role_create,
             role_update: req.body.permission.role_update,
@@ -21,7 +21,7 @@ const create = catchAsync(async (req: { body: any }, res: any) => {
             role_delete: req.body.permission.role_delete,
         });
         await services.mailServices.accountCreated(data.value)
-        res.status(200).send({ "data": newSubAdmin, "permission": "permission" });
+        res.status(200).send({ "data": newSubAdmin, "permission": permission });
     }
 })
 

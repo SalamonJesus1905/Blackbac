@@ -10,7 +10,12 @@ const getData = async(data: any)=>{
     return newUser
 }
 
+const getDataToken = async(data: any)=>{
+    const newUser = await Auth.findOne({ inviteToken: data})
+    return newUser
+}
+
 
 export default {
-    create, getData
+    create, getData, getDataToken
 }

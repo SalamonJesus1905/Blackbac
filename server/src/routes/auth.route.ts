@@ -9,7 +9,10 @@ router.post('/login', schemaValidate(authValidation.login), controllers.authCont
 router.get('/account/setup/:token', controllers.adminController.passwordSetup)
 router.post('/account/setup/:token', controllers.adminController.passwordInitilize)
 
-//admin
+//forget password flow
+router.get('/forgetpassword', controllers.authController.forgetPassword)
+router.get('/resetpassword/:token', controllers.authController.resetPasswordPage)
+router.post('/resetpassword/:token', controllers.authController.resetPassword)
 
 
 
