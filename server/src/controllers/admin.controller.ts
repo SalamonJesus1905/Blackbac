@@ -13,7 +13,7 @@ const create = catchAsync(async (req: { body: any }, res: any) => {
     else {
         const inviteToken = services.tokenServices.inviteTokenGenearation(req.body)
         const newSubAdmin = await Auth.create(data.value)
-        await Token.create({user_id:newSubAdmin._id,inviteToken})
+        await Token.create({ user_id: newSubAdmin._id, inviteToken })
         const permission = await Permission.create({
             user_id: newSubAdmin._id,
             role_create: req.body.permission.role_create,
@@ -21,7 +21,7 @@ const create = catchAsync(async (req: { body: any }, res: any) => {
             role_read: req.body.permission.role_read,
             role_delete: req.body.permission.role_delete,
         });
-        const userData = await Token.findOne({inviteToken}).populate("user_id");
+        const userData = await Token.findOne({ inviteToken }).populate("user_id");
         await services.mailServices.accountCreated(userData)
         res.status(200).send({ "data": userData, "permission": permission });
     }
@@ -72,13 +72,51 @@ const permission = catchAsync(async (req: {
     res.status(200).send(updateData);
 })
 
-const update = catchAsync(async (req: any, res:any): Promise<void> => {
-        res.status(200).send("updated")
+const updateRecord = catchAsync(async (req: any, res: any): Promise<void> => {
+    let userData:any = {}
+    if (req.body.username !== undefined){
+        userData.username = req.body.username
+    }
+    if (req.body.email !== undefined){
+        userData.email = req.body.email
+    }
+    if (req.body.password !== undefined){
+        userData.password = await bcrypt.hash(req.body.password, 10)
+    }
+    if (req.body.role_id !== undefined){
+        userData.role_id = req.body.role_id
+    }
+    await Auth.findByIdAndUpdate(req.params.id, userData)
+    await Permission.findOneAndUpdate({ user_id: req.params.id },req.body.permission)
+    const data = await Auth.findById(req.params.id)
+    res.status(200).send({ message: "Data updated Successful", data})
 });
 
+const deleteRecord = catchAsync(async (req: any, res: any): Promise<void> => {
+    await Token.findOneAndDelete({ user_id: req.params.id })
+    await Permission.findOneAndDelete({ user_id: req.params.id })
+    await Auth.findByIdAndDelete(req.params.id)
+    res.status(200).send({ message: "Data deleted Successful"})
+});
 export default {
-    create, getSubUsers, getCustomUsers, getUsers, permission, passwordSetup, passwordInitilize, update
+    create, getSubUsers, getCustomUsers, getUsers, permission, passwordSetup, passwordInitilize, updateRecord, deleteRecord
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // let data = await Auth.aggregate([
 //     {

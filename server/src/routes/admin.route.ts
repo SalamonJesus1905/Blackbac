@@ -15,5 +15,7 @@ router.get('/users', [tokenValidation.validToken, roleValidation.roleAdmin], con
 //admin permissions assigning page
 router.put('/permission/:id', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.permission)
 
-router.put('/update/:id', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.update)
+router.put('/update/:id', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.updateRecord)
+
+router.delete('/delete/:id', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.deleteRecord)
 export default router;
