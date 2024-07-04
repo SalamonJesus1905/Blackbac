@@ -4,15 +4,16 @@ import catchAsync from "../utils/catchAsync";
 import authValidation from "../middleware/auth.validation";
 import services from "../services/index";
 import bcrypt from "bcrypt";
+import Token from "../models/token";
 const create = catchAsync(async (req: { body: any }, res: any) => {
     const data: any = authValidation.userCreation(req.body)
     if (data.error) {
         res.status(500).send({ message: data.error })
     }
     else {
-        const inviteToken = services.tokenServices.inviteTokenGenearation(req.body._id)
-        data.value.inviteToken = inviteToken
+        const inviteToken = services.tokenServices.inviteTokenGenearation(req.body)
         const newSubAdmin = await Auth.create(data.value)
+        await Token.create({user_id:newSubAdmin._id,inviteToken})
         const permission = await Permission.create({
             user_id: newSubAdmin._id,
             role_create: req.body.permission.role_create,
@@ -20,18 +21,19 @@ const create = catchAsync(async (req: { body: any }, res: any) => {
             role_read: req.body.permission.role_read,
             role_delete: req.body.permission.role_delete,
         });
-        await services.mailServices.accountCreated(data.value)
-        res.status(200).send({ "data": newSubAdmin, "permission": permission });
+        const userData = await Token.findOne({inviteToken}).populate("user_id");
+        await services.mailServices.accountCreated(userData)
+        res.status(200).send({ "data": userData, "permission": permission });
     }
 })
 
 const passwordSetup = catchAsync(async (req: any, res: any) => {
-    const inviteVerified: any = await Auth.findOne({ inviteToken: req.params.token })
-    if (inviteVerified.inviteTokenVerified === 1) {
+    const inviteVerified: any = await Token.findOne({ inviteToken: req.params.token }).populate("user_id")
+    if (inviteVerified.user_id.inviteTokenVerified === 1) {
         const tokenValid: any = services.tokenServices.inviteTokenValidation(req.params.token)
         if (tokenValid === true) {
-            await Auth.findOneAndUpdate({ inviteToken: req.params.token }, { inviteTokenVerified: 0 })
-            const data = await Auth.findOne({ inviteToken: req.params.token })
+            await Auth.findOneAndUpdate({ email: inviteVerified.user_id.email }, { inviteTokenVerified: 0 })
+            const data = await Token.findOne({ inviteToken: req.params.token }).populate('user_id')
             res.status(201).json({ message: "token validation successful", data })
         }
     } else {
@@ -41,8 +43,9 @@ const passwordSetup = catchAsync(async (req: any, res: any) => {
 
 const passwordInitilize = catchAsync(async (req: any, res: any) => {
     const password = await bcrypt.hash(req.body.password, 10)
-    await Auth.findOneAndUpdate({ inviteToken: req.params.token }, { password });
-    const result = await Auth.findOne({ inviteToken: req.params.token })
+    const user: any = await Token.findOne({ inviteToken: req.params.token }).populate('user_id')
+    await Auth.findOneAndUpdate({ email: user.user_id.email }, { password });
+    const result = await Auth.findOne({ email: user.user_id.email })
     res.status(201).json({ message: "Password Successfully updated", result })
 })
 
@@ -69,8 +72,12 @@ const permission = catchAsync(async (req: {
     res.status(200).send(updateData);
 })
 
+const update = catchAsync(async (req: any, res:any): Promise<void> => {
+        res.status(200).send("updated")
+});
+
 export default {
-    create, getSubUsers, getCustomUsers, getUsers, permission, passwordSetup, passwordInitilize
+    create, getSubUsers, getCustomUsers, getUsers, permission, passwordSetup, passwordInitilize, update
 }
 
 // let data = await Auth.aggregate([

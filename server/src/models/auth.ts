@@ -27,15 +27,15 @@ const authSchema = new mongoose.Schema({
         required:true,
         default: 4
     },
-    token:{
-        type:String,
-        default: null
-    },
-    inviteToken:{
-        type:String,
-        default: null,
-        required:true
-    },
+    // token:{
+    //     type:String,
+    //     default: null
+    // },
+    // inviteToken:{
+    //     type:String,
+    //     default: null,
+    //     required:true
+    // },
     inviteTokenVerified:{
         type:Number,
         default: 1

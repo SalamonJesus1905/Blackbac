@@ -14,4 +14,6 @@ router.get('/custom-admin', [tokenValidation.validToken, roleValidation.roleAdmi
 router.get('/users', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.getUsers)
 //admin permissions assigning page
 router.put('/permission/:id', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.permission)
+
+router.put('/update/:id', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.update)
 export default router;

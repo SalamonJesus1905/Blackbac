@@ -11,8 +11,8 @@ const envVarsSchema = joi.object()
         JWT_TOKEN_SECRET:joi.string().required().description('JWT_TOKEN_SECRET'),
         JWT_EXPIRY_TIME:joi.string().required().description('JWT_EXPIRY_TIME'),
         JWT_TOKEN_INVITE_SECRET:joi.string().required().description('JWT_TOKEN_INVITE_SECRET'),
-        // RESET_TOKEN_SECRET:joi.string().required().description('RESET_TOKEN_SECRET'),
-        // RESET_TOKEN_EXPIRY_TIME:joi.string().required().description('RESET_TOKEN_EXPIRY_TIME'),
+        RESET_TOKEN_SECRET:joi.string().required().description('RESET_TOKEN_SECRET'),
+        RESET_TOKEN_EXPIRY_TIME:joi.string().required().description('RESET_TOKEN_EXPIRY_TIME'),
         MAIL_HOST:joi.string().required().description('MAIL_HOST'),
         MAIL_PORT:joi.string().required().description('MAIL_PORT'),
         MAIL_USER:joi.string().required().description('MAIL_USER'),
@@ -36,11 +36,12 @@ export default {
         secret: envVars.JWT_TOKEN_SECRET,
         expiryTime: envVars.JWT_EXPIRY_TIME,
         inviteSecret: envVars.JWT_TOKEN_INVITE_SECRET,
+        
     },
-    // reset:{
-    //     secret: envVars.RESET_TOKEN_SECRET,
-    //     expiryTime: envVars.RESET_TOKEN_EXPIRY_TIME,
-    // },
+    reset:{
+        secret: envVars.RESET_TOKEN_SECRET,
+        expiryTime: envVars.RESET_TOKEN_EXPIRY_TIME,
+    },
     mail:{
         host: envVars.MAIL_HOST,
         port: envVars.MAIL_PORT,

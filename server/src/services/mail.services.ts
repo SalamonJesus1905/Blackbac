@@ -6,7 +6,7 @@ const accountCreated = async (toUser: any) => {
     let filePath =  path.join(__dirname, '../views/email.html') 
     let data = fs.readFileSync(filePath, 'utf8');
     let emailCont = data.toString()
-    let subject = emailCont.replace("${toUser.username}",toUser.username)
+    let subject = emailCont.replace("${toUser.username}",toUser.user_id.username)
              .replace('${config.base_url}',config.base_url)
              .replace("${toUser.inviteToken}",toUser.inviteToken)
     let transport = nodemailer.createTransport({
@@ -19,7 +19,7 @@ const accountCreated = async (toUser: any) => {
     });
     let mailOptions = {
         from: config.mail.from,
-        to: toUser.email,
+        to: toUser.user_id.email,
         subject: "Account Created",
         html: subject,
     }
@@ -37,9 +37,9 @@ const resetPassword = async (toUser: any) => {
     let filePath =  path.join(__dirname, '../views/forgetPassword.html') 
     let data = fs.readFileSync(filePath, 'utf8');
     let emailCont = data.toString()
-    let subject = emailCont.replace("${toUser.username}",toUser.username)
+    let subject = emailCont.replace("${toUser.username}",toUser.user_id.username)
              .replace('${config.base_url}',config.base_url)
-             .replace("${toUser.inviteToken}",toUser.inviteToken)
+             .replace("${toUser.inviteToken}",toUser.resetToken)
     let transport = nodemailer.createTransport({
         host: config.mail.host,
         port: config.mail.port,
@@ -50,7 +50,7 @@ const resetPassword = async (toUser: any) => {
     });
     let mailOptions = {
         from: config.mail.from,
-        to: toUser.email,
+        to: toUser.user_id.email,
         subject: "Reset Password",
         html: subject,
     }

@@ -41,4 +41,12 @@ const validToken = (token:any)=>{
     });
 }
 
-export default {generateToken, validToken, inviteTokenGenearation, inviteTokenValidation};
+const resetTokenGeneration = (obj:any) =>{
+    const payload = obj
+    const secret = config.reset.secret;
+    const options = { expiresIn: config.reset.expiryTime * 60 };
+    let token = jwt.sign(payload, secret, options);
+    return token
+}
+
+export default {generateToken, validToken, inviteTokenGenearation, inviteTokenValidation, resetTokenGeneration};
