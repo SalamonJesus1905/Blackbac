@@ -73,30 +73,23 @@ const permission = catchAsync(async (req: {
 })
 
 const updateRecord = catchAsync(async (req: any, res: any): Promise<void> => {
-    let userData:any = {}
-    if (req.body.username !== undefined){
-        userData.username = req.body.username
+    const idExist = await Auth.findById(req.params.id)
+    if (idExist !== null) {
+        const data = authValidation.userUpdation(req.body)
+        const userPermission = authValidation.UpdationPermissionSchema(req.body.permission)
+        await Auth.findByIdAndUpdate(req.params.id, data.value)
+        await Permission.findOneAndUpdate({ user_id: req.params.id }, userPermission.value)
+        const updateData = await Auth.findById(req.params.id)
+        res.status(200).send({ message: "Data updated Successful", updateData })
     }
-    if (req.body.email !== undefined){
-        userData.email = req.body.email
-    }
-    if (req.body.password !== undefined){
-        userData.password = await bcrypt.hash(req.body.password, 10)
-    }
-    if (req.body.role_id !== undefined){
-        userData.role_id = req.body.role_id
-    }
-    await Auth.findByIdAndUpdate(req.params.id, userData)
-    await Permission.findOneAndUpdate({ user_id: req.params.id },req.body.permission)
-    const data = await Auth.findById(req.params.id)
-    res.status(200).send({ message: "Data updated Successful", data})
+    res.status(500).send("Data not found")
 });
 
 const deleteRecord = catchAsync(async (req: any, res: any): Promise<void> => {
     await Token.findOneAndDelete({ user_id: req.params.id })
     await Permission.findOneAndDelete({ user_id: req.params.id })
     await Auth.findByIdAndDelete(req.params.id)
-    res.status(200).send({ message: "Data deleted Successful"})
+    res.status(200).send({ message: "Data deleted Successful" })
 });
 export default {
     create, getSubUsers, getCustomUsers, getUsers, permission, passwordSetup, passwordInitilize, updateRecord, deleteRecord

@@ -16,11 +16,6 @@ const getData = async (data: any) => {
     return newUser
 }
 
-// const tokenDetails = async (data: any) => {
-//     const newUser = await Token.findOne({ user_id: data})
-//     return newUser
-// }
-
 const getDataToken = async (data: any) => {
     const newUser = await Auth.findOne({ inviteToken: data})
     return newUser
