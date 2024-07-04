@@ -86,10 +86,15 @@ const updateRecord = catchAsync(async (req: any, res: any): Promise<void> => {
 });
 
 const deleteRecord = catchAsync(async (req: any, res: any): Promise<void> => {
-    await Token.findOneAndDelete({ user_id: req.params.id })
-    await Permission.findOneAndDelete({ user_id: req.params.id })
-    await Auth.findByIdAndDelete(req.params.id)
-    res.status(200).send({ message: "Data deleted Successful" })
+    const userData = await Auth.findById(req.params.id)
+    if (userData !== null) {
+        await Token.findOneAndDelete({ user_id: req.params.id })
+        await Permission.findOneAndDelete({ user_id: req.params.id })
+        await Auth.findByIdAndDelete(req.params.id)
+        res.status(200).send({ message: "Data deleted Successful" })
+    }
+    res.status(500).send({ message: "Data Not Found" })
+
 });
 export default {
     create, getSubUsers, getCustomUsers, getUsers, permission, passwordSetup, passwordInitilize, updateRecord, deleteRecord
