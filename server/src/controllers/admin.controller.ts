@@ -5,28 +5,144 @@ import authValidation from "../middleware/auth.validation";
 import services from "../services/index";
 import bcrypt from "bcrypt";
 import Token from "../models/token";
-const create = catchAsync(async (req: { body: any }, res: any) => {
-    const data: any = authValidation.userCreation(req.body)
-    if (data.error) {
-        res.status(500).send({ message: data.error })
-    }
+import Address from "../models/address";
+
+//subadmin controls
+const createSubadmin = catchAsync(async (req: { body: any }, res: any) => {
+    const data: any = authValidation.customCreation(req.body)
+    const permission: any = authValidation.PermissionSchema(req.body.permission)
+    const address: any = authValidation.addressSchema(req.body.address)
+    if (data.error || permission.error || address.error) {
+        res.status(500).send({ message: data.error || permission.error || address.error })
+    }    
     else {
-        const inviteToken = services.tokenServices.inviteTokenGenearation(req.body)
+        const inviteToken = services.tokenServices.inviteTokenGenearation({"email":req.body.email})
         const newSubAdmin = await Auth.create(data.value)
+        permission.value.user_id = newSubAdmin._id
+        address.value.user_id = newSubAdmin._id
         await Token.create({ user_id: newSubAdmin._id, inviteToken })
-        const permission = await Permission.create({
-            user_id: newSubAdmin._id,
-            role_create: req.body.permission.role_create,
-            role_update: req.body.permission.role_update,
-            role_read: req.body.permission.role_read,
-            role_delete: req.body.permission.role_delete,
-        });
+        const userPermission = await Permission.create(permission.value);
+        await Address.create(address.value);
         const userData = await Token.findOne({ inviteToken }).populate("user_id");
         await services.mailServices.accountCreated(userData)
-        res.status(200).send({ "data": userData, "permission": permission });
+        res.status(200).send({ "data": userData, "permission": userPermission });
     }
 })
 
+const getSubUsers = catchAsync(async (req: { body: any }, res: any): Promise<void> => {
+    const data: any = await Auth.find({ role_id: 2 })
+    res.status(200).json(data);
+})
+
+const updateSubadminRecord = catchAsync(async (req: any, res: any): Promise<void> => {
+    const idExist = await Auth.findById(req.params.id)
+    if (idExist !== null) {
+        const data: any = authValidation.customUpdation(req.body)
+        const address: any = authValidation.updateAddressSchema(req.body.address)
+        const userPermission = authValidation.UpdationPermissionSchema(req.body.permission)
+        await Auth.findByIdAndUpdate(req.params.id, data.value)
+        await Permission.findOneAndUpdate({ user_id: req.params.id }, userPermission.value)
+        await Address.findOneAndUpdate({ user_id: req.params.id }, address.value)
+        const updateData = await Auth.findById(req.params.id)
+        res.status(200).send({ message: "Data updated Successful", updateData })
+    } else {
+        res.status(500).send("Data not found")
+    }
+});
+
+const deleteSubadminRecord = catchAsync(async (req: any, res: any): Promise<void> => {
+    const userData = await Auth.findById(req.params.id)
+    if (userData !== null) {
+        await Token.findOneAndDelete({ user_id: req.params.id })
+        await Permission.findOneAndDelete({ user_id: req.params.id })
+        await Address.findOneAndDelete({ user_id: req.params.id })
+        await Auth.findByIdAndDelete(req.params.id)
+        res.status(200).send({ message: "Data deleted Successful" })
+    }
+    else {
+        res.status(500).send({ message: "Data Not Found" })
+    }
+});
+
+// customer admin controls
+const getCustomAdmin = catchAsync(async (req: { body: any }, res: any): Promise<void> => {
+    const data: any = await Auth.find({ role_id: 3 })
+    res.status(200).send(data);
+})
+
+const createCustomAdmin = catchAsync(async (req: any, res: any): Promise<void> => {
+    const data: any = authValidation.customCreation(req.body)
+    const permission: any = authValidation.PermissionSchema(req.body.permission)
+    const address: any = authValidation.addressSchema(req.body.address)
+    if (data.error || permission.error || address.error) {
+        res.status(500).send({ message: data.error || permission.error || address.error })
+    }
+    else {
+        const inviteToken = services.tokenServices.inviteTokenGenearation({ "email": data.value.email })
+        const newCustomAdmin = await Auth.create(data.value)
+        permission.value.user_id = newCustomAdmin._id
+        address.value.user_id = newCustomAdmin._id
+        await Token.create({ user_id: newCustomAdmin._id, inviteToken })
+        await Permission.create(permission.value);
+        console.log("hello")
+        console.log(address)
+        await Address.create(address.value);
+        const userData = await Token.findOne({ inviteToken }).populate("user_id");
+        await services.mailServices.accountCreated(userData)
+        res.status(200).send({ message: "CustomerAdmin accout Successfully created",data});
+    }
+})
+
+const updateCustomAdmin = catchAsync(async (req: any, res: any): Promise<void> => {
+    const idExist = await Auth.findById(req.params.id)
+    if (idExist !== null) {
+        const data: any = authValidation.customUpdation(req.body)
+        const permission: any = authValidation.PermissionSchema(req.body.permission)
+        const address: any = authValidation.updateAddressSchema(req.body.address)
+        if (data.error || permission.error || address.error) {
+            res.status(500).send({ message: data.error || permission.error || address.error })
+        }
+        else {
+            await Auth.findByIdAndUpdate(req.params.id, data.value)
+            await Permission.findOneAndUpdate({ user_id: req.params.id }, permission.value)
+            await Address.findOneAndUpdate({ user_id: req.params.id }, address.value)
+            res.status(201).send({ message: "CustomerAdmin account Successfully updated" });
+        }
+    } else {
+        res.status(500).send({ message: "Data Not Found" });
+    }
+})
+
+
+const deleteCustomAdmin = catchAsync(async (req: any, res: any): Promise<void> => {
+    const userData = await Auth.findById(req.params.id)
+    if (userData !== null) {
+        await Token.findOneAndDelete({ user_id: req.params.id })
+        await Permission.findOneAndDelete({ user_id: req.params.id })
+        await Address.findOneAndDelete({ user_id: req.params.id })
+        await Auth.findByIdAndDelete(req.params.id)
+        res.status(200).send({ message: "Custom Admin Data deleted Successful" })
+    } else {
+        res.status(500).send({ message: "Data Not Found" })
+    }
+});
+//users controls
+const getUsers = catchAsync(async (req: { body: any }, res: any): Promise<void> => {
+    const data: any = await Auth.find({ role_id: 4 })
+    res.status(200).send(data);
+})
+
+
+
+const permission = catchAsync(async (req: {
+    params: any; body: any
+}, res: any): Promise<void> => {
+    await Permission.findOneAndUpdate({ user_id: req.params.id }, req.body)
+    const updateData: any = await Permission.findOne({ user_id: req.params.id })
+    res.status(200).send(updateData);
+})
+
+//password setup 
 const passwordSetup = catchAsync(async (req: any, res: any) => {
     const inviteVerified: any = await Token.findOne({ inviteToken: req.params.token }).populate("user_id")
     if (inviteVerified.user_id.inviteTokenVerified === 1) {
@@ -49,55 +165,10 @@ const passwordInitilize = catchAsync(async (req: any, res: any) => {
     res.status(201).json({ message: "Password Successfully updated", result })
 })
 
-const getSubUsers = catchAsync(async (req: { body: any }, res: any): Promise<void> => {
-    const data: any = await Auth.find({ role_id: 2 })
-    res.status(200).json(data);
-})
-
-const getCustomUsers = catchAsync(async (req: { body: any }, res: any): Promise<void> => {
-    const data: any = await Auth.find({ role_id: 3 })
-    res.status(200).send(data);
-})
-
-const getUsers = catchAsync(async (req: { body: any }, res: any): Promise<void> => {
-    const data: any = await Auth.find({ role_id: 4 })
-    res.status(200).send(data);
-})
-
-const permission = catchAsync(async (req: {
-    params: any; body: any
-}, res: any): Promise<void> => {
-    await Permission.findOneAndUpdate({ user_id: req.params.id }, req.body)
-    const updateData: any = await Permission.findOne({ user_id: req.params.id })
-    res.status(200).send(updateData);
-})
-
-const updateRecord = catchAsync(async (req: any, res: any): Promise<void> => {
-    const idExist = await Auth.findById(req.params.id)
-    if (idExist !== null) {
-        const data = authValidation.userUpdation(req.body)
-        const userPermission = authValidation.UpdationPermissionSchema(req.body.permission)
-        await Auth.findByIdAndUpdate(req.params.id, data.value)
-        await Permission.findOneAndUpdate({ user_id: req.params.id }, userPermission.value)
-        const updateData = await Auth.findById(req.params.id)
-        res.status(200).send({ message: "Data updated Successful", updateData })
-    }
-    res.status(500).send("Data not found")
-});
-
-const deleteRecord = catchAsync(async (req: any, res: any): Promise<void> => {
-    const userData = await Auth.findById(req.params.id)
-    if (userData !== null) {
-        await Token.findOneAndDelete({ user_id: req.params.id })
-        await Permission.findOneAndDelete({ user_id: req.params.id })
-        await Auth.findByIdAndDelete(req.params.id)
-        res.status(200).send({ message: "Data deleted Successful" })
-    }
-    res.status(500).send({ message: "Data Not Found" })
-
-});
 export default {
-    create, getSubUsers, getCustomUsers, getUsers, permission, passwordSetup, passwordInitilize, updateRecord, deleteRecord
+    createSubadmin, getSubUsers, getCustomAdmin, getUsers, permission,
+    passwordSetup, passwordInitilize, updateSubadminRecord, deleteSubadminRecord,
+    createCustomAdmin, updateCustomAdmin, deleteCustomAdmin
 }
 
 

@@ -56,7 +56,79 @@ const UpdationPermissionSchema = (data: any) => {
   return { error, value }
 }
 
+const PermissionSchema = (data: any) => {
+  const userSchema = Joi.object({
+    role_create: Joi.number(),
+    role_update: Joi.number(),
+    role_delete: Joi.number(),
+    role_read: Joi.number(),
+  })
+  const { error, value } = userSchema.validate(data)
+  return { error, value }
+}
+
+const customCreation = (data: any) => {
+  const customSchema = Joi.object({
+    username: Joi.string().required(),
+    email: Joi.string().email().required(),
+    // phone: Joi.number().min(10).required(),
+    password: Joi.string().min(6).pattern(/^[a-zA-Z0-9]{3,30}$/).required(),
+    // company: Joi.string().required(),
+    role_id: Joi.number().required(),
+    // custom_permission: Joi.object(),
+    // status: Joi.boolean(),
+    address:Joi.object(),
+    permission:Joi.object(),
+  })
+  const { error, value } = customSchema.validate(data)
+  return { error, value }
+}
+
+const addressSchema = (data: any) => {
+  const customSchema = Joi.object({
+    address1: Joi.string().required(),
+    address2: Joi.string(),
+    city: Joi.string().required(),
+    country: Joi.string().required(),
+    postalcode: Joi.number().required()
+  })
+  const { error, value } = customSchema.validate(data)
+  return { error, value }
+}
+
+const customUpdation = (data: any)=>{
+  const customSchema = Joi.object({
+    username: Joi.string(),
+    email: Joi.string().email(),
+    // phone: Joi.number().min(10).required(),
+    password: Joi.string().min(6).pattern(/^[a-zA-Z0-9]{3,30}$/),
+    // company: Joi.string().required(),
+    role_id: Joi.number(),
+    // custom_permission: Joi.object(),
+    // status: Joi.boolean(),
+    address:Joi.object(),
+    permission:Joi.object(),
+  })
+  const { error, value } = customSchema.validate(data)
+  return { error, value }
+}
+
+const updateAddressSchema = (data: any) => {
+  const customSchema = Joi.object({
+    address1: Joi.string(),
+    address2: Joi.string(),
+    city: Joi.string(),
+    country: Joi.string(),
+    postalcode: Joi.number()
+  })
+  const { error, value } = customSchema.validate(data)
+  return { error, value }
+}
+
 
 export default {
-  register, login, userCreation, userUpdation, UpdationPermissionSchema
+  register, login, userCreation, userUpdation, 
+  UpdationPermissionSchema, customCreation, 
+  PermissionSchema, addressSchema, customUpdation,
+  updateAddressSchema
 }

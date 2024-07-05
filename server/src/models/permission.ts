@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 const permissionSchema = new mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true
     },
     role_create:{
         type:Number,
@@ -28,5 +27,5 @@ const permissionSchema = new mongoose.Schema({
     timestamps:true
 })
 
-const Permission = mongoose.model('permission',permissionSchema)
+const Permission = mongoose.model('Permission',permissionSchema)
 export default Permission
