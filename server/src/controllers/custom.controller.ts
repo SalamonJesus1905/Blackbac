@@ -8,14 +8,23 @@ const index = catchAsync(async (req: any, res: any): Promise<void> => {
 
 const orgActivation = catchAsync(async (req: any, res: any): Promise<void> => {
     const customerId = req.body.customerId
-    const tokenData:any = await CustomId.findOne({ customId: customerId })
-    if (tokenData !== null && tokenData.isUsed === 1) {
-        await Organization.findByIdAndUpdate("668bc9a777a4e6c98d76ac9c", { customerId, status: true })
-        tokenData.idUsed = 0
-        await tokenData.save()
-        res.status(200).send({ message: "Organization activated Successful", status: true })
+    const orgData: any = await Organization.findById(req.params.id)
+    const custom = await CustomId.findOne({ customId: customerId })
+    if (custom) {
+        if (orgData !== null && orgData.customerId === null) {
+            orgData.status = true
+            orgData.customerId = customerId
+            await orgData.save()
+            await CustomId.findOneAndUpdate({ customId: customerId }, { idUsed: 0 })
+            res.status(200).send({ message: "Organization activated Successful", status: true })
+        }
+        else {
+            res.status(404).send({ message: "Organization already activated" })
+        }
     }
-    res.status(404).send({ message: "Invalid Customer Id" })
+    else {
+        res.status(404).send({ message: "Invalid Customer Id" })
+    }
 
 })
 

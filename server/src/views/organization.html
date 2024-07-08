@@ -30,7 +30,7 @@
             padding: 20px;
             box-sizing: border-box;
             border-radius: 8px;
-            background: lightpink;
+            background: white;
             background-position: left;
             background-size: cover;
             background-repeat: no-repeat;
@@ -42,6 +42,7 @@
             display: flex;
             justify-content: center;
             border-radius: 10px;
+            background-color: lightgoldenrodyellow;
         }
 
         .org-title h1 {
@@ -49,6 +50,7 @@
         }
 
         .org-content {
+            color: rgb(56, 44, 44);
             display: flex;
             margin-top: 20px;
             flex-direction: column;
@@ -57,6 +59,8 @@
             padding: 10px;
             box-sizing: border-box;
             border-radius: 10px;
+            background-color: lightgoldenrodyellow;
+            font-weight: 400;
         }
 
         .name-card {
@@ -95,6 +99,10 @@
         .customer-id {
             display: flex;
             justify-content: center;
+            background-color: khaki ;
+        }
+        #cus-id{
+            color: white;
         }
     </style>
     <div class="container">
@@ -112,7 +120,7 @@
                         <tr>
                             <td>
                                 <p>
-                                <div class="greet">Welcome to Greenbac!</div>
+                                <div class="greet">Welcome to Greenbac!,</div>
                                 <span id="cont-start">To</span> activate your account, please use the Customer ID
                                 provided below:
                                 </p>
@@ -121,7 +129,7 @@
                         <tr>
                             <td>
                                 <div class="customer-id">
-                                    <h2>Customer ID: cutomerId </h2>
+                                    <h2>Customer ID: <span id="cus-id">cutomerId</span></h2>
                                 </div>
                             </td>
                         </tr>
