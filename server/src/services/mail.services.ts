@@ -63,6 +63,36 @@ const resetPassword = async (toUser: any) => {
         }
     });
 }
+
+const organizationCreated = (toUser:any, id:any) =>{
+    let filePath =  path.join(__dirname, '../views/organization.html') 
+    let data = fs.readFileSync(filePath, 'utf8');
+    let emailCont = data.toString()
+    let subject = emailCont.replace("${toUser.username}",toUser.firstName)
+             .replace('cutomerId',id)
+    let transport = nodemailer.createTransport({
+        host: config.mail.host,
+        port: config.mail.port,
+        auth: {
+            user: config.mail.user,
+            pass: config.mail.password
+        }
+    });
+    let mailOptions = {
+        from: config.mail.from,
+        to: toUser.email,
+        subject: "Organization created",
+        html: subject,
+    }
+
+    transport.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            return error;
+        } else {
+            return info.response;
+        }
+    });
+}
 export default {
-    accountCreated, resetPassword
+    accountCreated, resetPassword, organizationCreated
 }

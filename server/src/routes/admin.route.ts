@@ -17,6 +17,8 @@ router.get('/custom', [tokenValidation.validToken, roleValidation.roleAdmin], co
 router.post('/createCustom', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.createCustomAdmin)
 router.put('/updateCustom/:id', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.updateCustomAdmin)
 router.delete('/deleteCustom/:id', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.deleteCustomAdmin)
+router.post('/organization/:id', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.createOrganization)
+
 //admin users view page
 
 router.get('/users', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.getUsers)

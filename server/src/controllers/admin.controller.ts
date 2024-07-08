@@ -6,6 +6,8 @@ import services from "../services/index";
 import bcrypt from "bcrypt";
 import Token from "../models/token";
 import Address from "../models/address";
+import Organization from "../models/organization";
+import CustomId from "../models/cutomerid";
 
 //subadmin controls
 const createSubadmin = catchAsync(async (req: { body: any }, res: any) => {
@@ -14,9 +16,9 @@ const createSubadmin = catchAsync(async (req: { body: any }, res: any) => {
     const address: any = authValidation.addressSchema(req.body.address)
     if (data.error || permission.error || address.error) {
         res.status(500).send({ message: data.error || permission.error || address.error })
-    }    
+    }
     else {
-        const inviteToken = services.tokenServices.inviteTokenGenearation({"email":req.body.email})
+        const inviteToken = services.tokenServices.inviteTokenGenearation({ "email": req.body.email })
         const newSubAdmin = await Auth.create(data.value)
         permission.value.user_id = newSubAdmin._id
         address.value.user_id = newSubAdmin._id
@@ -84,12 +86,10 @@ const createCustomAdmin = catchAsync(async (req: any, res: any): Promise<void> =
         address.value.user_id = newCustomAdmin._id
         await Token.create({ user_id: newCustomAdmin._id, inviteToken })
         await Permission.create(permission.value);
-        console.log("hello")
-        console.log(address)
         await Address.create(address.value);
-        const userData = await Token.findOne({ inviteToken }).populate("user_id");
+        const userData: any = await Token.findOne({ inviteToken }).populate("user_id");
         await services.mailServices.accountCreated(userData)
-        res.status(200).send({ message: "CustomerAdmin accout Successfully created",data});
+        res.status(200).send({ message: "CustomerAdmin accout Successfully created", userData });
     }
 })
 
@@ -165,10 +165,31 @@ const passwordInitilize = catchAsync(async (req: any, res: any) => {
     res.status(201).json({ message: "Password Successfully updated", result })
 })
 
+const createOrganization = catchAsync(async (req: any, res: any) => {
+    const user = await Auth.findById(req.params.id)
+    if (user !== null && user.inviteTokenVerified === 0) {
+        const data: any = authValidation.organizationSchema(req.body)
+        if (data.error) {
+            res.status(500).send({ message: data.error.message })
+        }
+        const customerId = await services.userServices.customerIdGeneration()
+        data.value.user_id = req.params.id
+        const organization = await Organization.create(data.value)
+        await CustomId.create({
+            user_id: req.params.id,
+            customId:customerId
+        })
+        const mailStatus = await services.mailServices.organizationCreated(data.value,customerId)
+        res.status(200).send({mailStatus:mailStatus ,message: "Organization created Successful",data: organization})
+    } else {
+        res.status(500).send({ message: "user status inactive" })
+    }
+})
+
 export default {
     createSubadmin, getSubUsers, getCustomAdmin, getUsers, permission,
     passwordSetup, passwordInitilize, updateSubadminRecord, deleteSubadminRecord,
-    createCustomAdmin, updateCustomAdmin, deleteCustomAdmin
+    createCustomAdmin, updateCustomAdmin, deleteCustomAdmin, createOrganization
 }
 
 

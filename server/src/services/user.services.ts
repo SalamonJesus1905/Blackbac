@@ -21,7 +21,14 @@ const getDataToken = async (data: any) => {
     return newUser
 }
 
+const customerIdGeneration = async () => {
+    const prefix = "CAR";
+    const customNumber = await Math.floor(10000 + Math.random() * 900000)
+    const customerId = prefix + customNumber
+    return customerId
+}
+
 
 export default {
-    create, getData, getDataToken, inviteTokenCreate
+    create, getData, getDataToken, inviteTokenCreate, customerIdGeneration
 }

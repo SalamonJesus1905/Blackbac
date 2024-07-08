@@ -77,8 +77,8 @@ const customCreation = (data: any) => {
     role_id: Joi.number().required(),
     // custom_permission: Joi.object(),
     // status: Joi.boolean(),
-    address:Joi.object(),
-    permission:Joi.object(),
+    address: Joi.object(),
+    permission: Joi.object(),
   })
   const { error, value } = customSchema.validate(data)
   return { error, value }
@@ -96,7 +96,7 @@ const addressSchema = (data: any) => {
   return { error, value }
 }
 
-const customUpdation = (data: any)=>{
+const customUpdation = (data: any) => {
   const customSchema = Joi.object({
     username: Joi.string(),
     email: Joi.string().email(),
@@ -106,8 +106,8 @@ const customUpdation = (data: any)=>{
     role_id: Joi.number(),
     // custom_permission: Joi.object(),
     // status: Joi.boolean(),
-    address:Joi.object(),
-    permission:Joi.object(),
+    address: Joi.object(),
+    permission: Joi.object(),
   })
   const { error, value } = customSchema.validate(data)
   return { error, value }
@@ -125,10 +125,33 @@ const updateAddressSchema = (data: any) => {
   return { error, value }
 }
 
+const organizationSchema = (data: any) => {
+  const customSchema = Joi.object({
+    user_id: Joi.string(),
+    customerId: Joi.string(),
+    companyName: Joi.string(),
+    firstName: Joi.string().required(),
+    lastName: Joi.string(),
+    email: Joi.string().email().required(),
+    phoneNo: Joi.number().min(10).required(),
+    mobileNo: Joi.number().min(10),
+    jobTitle: Joi.string(),
+    addressLine1: Joi.string().required(),
+    addressLine2: Joi.string(),
+    city: Joi.string().required(),
+    country: Joi.string().required(),
+    continent: Joi.string().required(),
+    postCode: Joi.number().required(),
+    status: Joi.boolean().required(),
+    adminPermission: Joi.string(),
+  })
+  const { error, value } = customSchema.validate(data)
+  return { error, value }
+}
 
 export default {
-  register, login, userCreation, userUpdation, 
-  UpdationPermissionSchema, customCreation, 
+  register, login, userCreation, userUpdation,
+  UpdationPermissionSchema, customCreation,
   PermissionSchema, addressSchema, customUpdation,
-  updateAddressSchema
+  updateAddressSchema, organizationSchema
 }

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .org-container {
+            width: 500px;
+            height: 600px;
+            margin: 100px;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 8px;
+            background: lightpink;
+            background-position: left;
+            background-size: cover;
+            background-repeat: no-repeat;
+            box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+        }
+
+        .org-title {
+            width: 455px;
+            display: flex;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
+        .org-title h1 {
+            font-family: monospace;
+        }
+
+        .org-content {
+            display: flex;
+            margin-top: 20px;
+            flex-direction: column;
+            width: 455px;
+            height: 465px;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 10px;
+        }
+
+        .name-card {
+            min-width: 250px;
+            height: 40px;
+            display: flex;
+            justify-content: initial;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .name-card span {
+            font-size: 18px;
+            font-weight: bolder;
+            font-family: monospace;
+        }
+
+        .org-subcontent {
+            width: 430px;
+            height: 405px;
+            font-size: 15px;
+            font-family: monospace;
+            line-height: 1.3;
+        }
+
+        p {
+            font-size: 15px;
+            font-family: monospace;
+            line-height: 1.3;
+        }
+
+        #cont-start {
+            margin-left: 20px;
+        }
+
+        .customer-id {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+    <div class="container">
+        <div class="org-container">
+            <div class="org-title">
+                <h1>Activate Your Account</h1>
+            </div>
+            <hr>
+            <div class="org-content">
+                <div class="name-card">
+                    <span>Hi, ${toUser.username}!</span>
+                </div>
+                <div class="org-subcontent">
+                    <table>
+                        <tr>
+                            <td>
+                                <p>
+                                <div class="greet">Welcome to Greenbac!</div>
+                                <span id="cont-start">To</span> activate your account, please use the Customer ID
+                                provided below:
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="customer-id">
+                                    <h2>Customer ID: cutomerId </h2>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    <span id="cont-start">If</span> you need any help, Don't contact our support
+                                    team.<br>
+                                    <br><br>
+                                    Thank you <br>
+                                    Best regards, <br>
+                                    The Greenbac Team <br>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
