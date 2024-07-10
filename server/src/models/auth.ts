@@ -22,23 +22,19 @@ const authSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    role_id:{
-        type: Number,
+    role:{
+        type: String,
+        enum:["SUPER_ADMIN","SUB_ADMIN","CUSTOMER_ADMIN","USER"],
         required:true,
-        default: 4
+        default: "USER"
     },
-    // token:{
-    //     type:String,
-    //     default: null
-    // },
-    // inviteToken:{
-    //     type:String,
-    //     default: null,
-    //     required:true
-    // },
     inviteTokenVerified:{
         type:Number,
         default: 1
+    },
+    custom_Id:{
+        type:mongoose.Schema.Types.ObjectId,
+        default:null
     }
 },{
     timestamps:true
@@ -49,6 +45,7 @@ authSchema.pre('save', async function(next){
     let user = this
     if(user.isModified('password')){
         user.password = await bcrypt.hash(user.password, 10)
+        next()
     }
 })
 

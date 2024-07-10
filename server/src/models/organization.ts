@@ -80,8 +80,7 @@ const organizationSchema = new mongoose.Schema({
     },
     status:{
         type: Boolean,
-        required: true,
-        enum: ['Active', 'Inactive']
+        required: true
     }
 
 },{

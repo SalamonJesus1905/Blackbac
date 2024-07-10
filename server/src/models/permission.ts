@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 const permissionSchema = new mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: "Auth"
     },
     role_create:{
         type:Number,

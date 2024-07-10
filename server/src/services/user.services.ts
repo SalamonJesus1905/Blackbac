@@ -23,7 +23,7 @@ const getDataToken = async (data: any) => {
 
 const customerIdGeneration = async () => {
     const prefix = "CAR";
-    const customNumber = await Math.floor(10000 + Math.random() * 900000)
+    const customNumber = Math.floor(10000 + Math.random() * 900000)
     const customerId = prefix + customNumber
     return customerId
 }

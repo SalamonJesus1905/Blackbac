@@ -1,8 +1,8 @@
 import express from 'express';
 import authRoute from "./auth.route";
-import roleRoute from "./role.route";
 import adminRoute from "./admin.route";
 import customRoute from "./custom.route";
+import userRoute from "./user.route";
 
 const router = express.Router()
 
@@ -10,16 +10,15 @@ const defaultRoutes = [
     {
         path: '/auth',
         route: authRoute
-    },
-    {
-        path: '/role',
-        route: roleRoute
     },{
         path: '/admin',
         route: adminRoute
     },{
         path: '/custom',
         route: customRoute
+    },{
+        path: '/user',
+        route: userRoute
     }
 ]
 

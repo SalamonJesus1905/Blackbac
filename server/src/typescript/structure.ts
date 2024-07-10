@@ -5,7 +5,7 @@ export interface RegisterData {
         username: string,
         email: string,
         password: string,
-        role_id: number,
+        role: string,
         inviteToken: string;
     }
 }
@@ -17,7 +17,7 @@ export interface UserData {
     username: string,
     email: string,
     password: string,
-    role_id: number,
+    role: string,
     inviteToken: string;
 }
 
@@ -26,7 +26,7 @@ export interface ResData {
     username: string,
     email: string,
     password: string,
-    role_id: number,
+    role: string,
     token: string | null,
     inviteToken: string | null,
     inviteTokenVerified: number,
@@ -64,6 +64,6 @@ export interface LoginGetData {
     username: string,
     email: string,
     password: string,
-    role_id: number,
+    role: string,
     
 }

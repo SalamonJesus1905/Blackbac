@@ -1,7 +1,7 @@
 import authController from "./auth.controller";
-import roleController from "./role.controller";
 import adminController from "./admin.controller";
 import customController from "./custom.controller";
+import userController from "./user.controller";
 export default {
-    authController, roleController, adminController,customController
+    authController, adminController, customController, userController
 }

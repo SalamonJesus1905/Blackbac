@@ -9,7 +9,7 @@ const register = {
         "string.empty": `Password cannot be empty`,
         "any.required": `Password is required`,
       }).required(),
-    role_id: Joi.number().required(),
+    role: Joi.string().required(),
   }),
 };
 
@@ -25,7 +25,7 @@ const userCreation = (data: any) => {
     username: Joi.string().min(6).required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).pattern(/^[a-zA-Z0-9]{3,30}$/).required(),
-    role_id: Joi.number().required(),
+    role: Joi.string().required(),
     permission: Joi.object(),
   })
   const { error, value } = subAdminSchema.validate(data)
@@ -37,7 +37,7 @@ const userUpdation = (data: any) => {
     username: Joi.string().min(6),
     email: Joi.string().email(),
     password: Joi.string().min(6).pattern(/^[a-zA-Z0-9]{3,30}$/),
-    role_id: Joi.number(),
+    role: Joi.string(),
     permission: Joi.object(),
   })
   const { error, value } = userSchema.validate(data)
@@ -74,7 +74,7 @@ const customCreation = (data: any) => {
     // phone: Joi.number().min(10).required(),
     password: Joi.string().min(6).pattern(/^[a-zA-Z0-9]{3,30}$/).required(),
     // company: Joi.string().required(),
-    role_id: Joi.number().required(),
+    role: Joi.string().required(),
     // custom_permission: Joi.object(),
     // status: Joi.boolean(),
     address: Joi.object(),
@@ -103,7 +103,7 @@ const customUpdation = (data: any) => {
     // phone: Joi.number().min(10).required(),
     password: Joi.string().min(6).pattern(/^[a-zA-Z0-9]{3,30}$/),
     // company: Joi.string().required(),
-    role_id: Joi.number(),
+    role: Joi.string(),
     // custom_permission: Joi.object(),
     // status: Joi.boolean(),
     address: Joi.object(),

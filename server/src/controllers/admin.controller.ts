@@ -32,7 +32,7 @@ const createSubadmin = catchAsync(async (req: { body: any }, res: any) => {
 })
 
 const getSubUsers = catchAsync(async (req: { body: any }, res: any): Promise<void> => {
-    const data: any = await Auth.find({ role_id: 2 })
+    const data: any = await Auth.find({ role: "SUB_ADMIN" })
     res.status(200).json(data);
 })
 
@@ -68,10 +68,9 @@ const deleteSubadminRecord = catchAsync(async (req: any, res: any): Promise<void
 
 // customer admin controls
 const getCustomAdmin = catchAsync(async (req: { body: any }, res: any): Promise<void> => {
-    const data: any = await Auth.find({ role_id: 3 })
+    const data: any = await Auth.find({ role: "CUSTOMER_ADMIN" })
     res.status(200).send(data);
 })
-
 const createCustomAdmin = catchAsync(async (req: any, res: any): Promise<void> => {
     const data: any = authValidation.customCreation(req.body)
     const permission: any = authValidation.PermissionSchema(req.body.permission)
@@ -128,7 +127,7 @@ const deleteCustomAdmin = catchAsync(async (req: any, res: any): Promise<void> =
 });
 //users controls
 const getUsers = catchAsync(async (req: { body: any }, res: any): Promise<void> => {
-    const data: any = await Auth.find({ role_id: 4 })
+    const data: any = await Auth.find({ role: "USER" })
     res.status(200).send(data);
 })
 
@@ -179,7 +178,7 @@ const createOrganization = catchAsync(async (req: any, res: any) => {
             user_id: req.params.id,
             customId:customerId
         })
-        const mailStatus = await services.mailServices.organizationCreated(data.value,customerId)
+        const mailStatus = services.mailServices.organizationCreated(data.value, customerId)
         res.status(200).send({mailStatus:mailStatus ,message: "Organization created Successful",data: organization})
     } else {
         res.status(500).send({ message: "user status inactive" })
