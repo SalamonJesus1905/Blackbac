@@ -28,7 +28,7 @@ export interface UserCreateResponse {
     email: string,
     password: string,
     role: string,
-    custom_Id:ObjectId,
+    custom_Id:ObjectId | null,
     inviteTokenVerified:number,
     createdAt: Date,
     updatedAt: Date | null,

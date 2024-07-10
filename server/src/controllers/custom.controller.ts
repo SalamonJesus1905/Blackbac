@@ -6,7 +6,7 @@ import CustomId from "../models/cutomerid";
 import Organization from "../models/organization";
 import services from "../services";
 import catchAsync from "../utils/catchAsync";
-import { UserBodyValid, UserAddressValid, UserCreateResponse, TokenDetails, TokenPopUser } from "../typescript/customer.user";
+import { UserBodyValid, UserAddressValid, TokenDetails, TokenPopUser } from "../typescript/customer.user";
 
 const index = catchAsync(async (req: any, res: any): Promise<void> => {
     res.send("welcome to the Custom admin dashboard")
