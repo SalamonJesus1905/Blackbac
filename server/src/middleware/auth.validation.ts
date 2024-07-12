@@ -149,9 +149,38 @@ const organizationSchema = (data: any) => {
   return { error, value }
 }
 
+const emailTemplates = (data: any) => {
+  const emailSchema = Joi.object({
+    templateName: Joi.string().required(),
+    subject: Joi.string().required(),
+    title: Joi.string().required(),
+    contentInitial: Joi.string().required(),
+    content: Joi.string().required(),
+    footerContent: Joi.string().required(),
+    footer: Joi.string().required()
+  })
+  const { error, value } = emailSchema.validate(data)
+  return { error, value }
+}
+
+const emailUpdateTemplates = (data: any) => {
+  const emailSchema = Joi.object({
+    templateName: Joi.string(),
+    subject: Joi.string(),
+    title: Joi.string(),
+    contentInitial: Joi.string(),
+    content: Joi.string(),
+    footerContent: Joi.string(),
+    footer: Joi.string()
+  })
+  const { error, value } = emailSchema.validate(data)
+  return { error, value }
+}
+
 export default {
   register, login, userCreation, userUpdation,
   UpdationPermissionSchema, customCreation,
   PermissionSchema, addressSchema, customUpdation,
-  updateAddressSchema, organizationSchema
+  updateAddressSchema, organizationSchema, 
+  emailTemplates, emailUpdateTemplates
 }

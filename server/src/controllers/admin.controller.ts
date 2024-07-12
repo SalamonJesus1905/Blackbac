@@ -8,6 +8,7 @@ import Token from "../models/token";
 import Address from "../models/address";
 import Organization from "../models/organization";
 import CustomId from "../models/cutomerid";
+import Email from "../models/email.template";
 
 //subadmin controls
 const createSubadmin = catchAsync(async (req: { body: any }, res: any) => {
@@ -176,19 +177,63 @@ const createOrganization = catchAsync(async (req: any, res: any) => {
         const organization = await Organization.create(data.value)
         await CustomId.create({
             user_id: req.params.id,
-            customId:customerId
+            customId: customerId
         })
         const mailStatus = services.mailServices.organizationCreated(data.value, customerId)
-        res.status(200).send({mailStatus:mailStatus ,message: "Organization created Successful",data: organization})
+        res.status(200).send({ mailStatus: mailStatus, message: "Organization created Successful", data: organization })
     } else {
         res.status(500).send({ message: "user status inactive" })
     }
 })
 
+
+// email template section
+
+const emailTemplatesViews = catchAsync(async (req: any, res: any) => {
+    const emailTemplate = await Email.find()
+    res.status(200).send({ message: "Email template", emailTemplate })
+})
+
+const emailTemplatesCreate = catchAsync(async (req: any, res: any) => {
+    const emailTemplate = authValidation.emailTemplates(req.body)
+    if (emailTemplate.error) {
+        res.status(500).send({ message: emailTemplate.error })
+    } else {
+        const emailTemplate = await Email.create(req.body)
+        res.status(200).send({ message: "Email template created", emailTemplate })
+    }
+})
+
+const emailTemplatesUpdate = catchAsync(async (req: any, res: any) => {
+    const emailTemplate: any = authValidation.emailUpdateTemplates(req.body)
+    if (emailTemplate.error) {
+        res.status(500).send({ message: emailTemplate.error })
+    } else {
+        const emailData = await Email.findByIdAndUpdate(req.params.id, emailTemplate.value)
+        if (emailData) {
+            await Email.findByIdAndUpdate(req.params.id, emailTemplate.value)
+            res.status(200).send({ message: "Email template updated successfully" })
+        }else{
+            res.status(404).send({ message: "Data Not Found" })
+        }
+    }
+})
+
+const emailTemplatesDelete = catchAsync(async (req: any, res: any) => {
+        const emailData = await Email.findById(req.params.id)
+        if (emailData) {
+            await Email.findByIdAndDelete(req.params.id)
+            res.status(200).send({ message: "Email template updated successfully" })
+        }else{
+            res.status(404).send({ message: "Data Not Found" })
+        }
+})
+
 export default {
     createSubadmin, getSubUsers, getCustomAdmin, getUsers, permission,
     passwordSetup, passwordInitilize, updateSubadminRecord, deleteSubadminRecord,
-    createCustomAdmin, updateCustomAdmin, deleteCustomAdmin, createOrganization
+    createCustomAdmin, updateCustomAdmin, deleteCustomAdmin, createOrganization,
+    emailTemplatesViews, emailTemplatesCreate, emailTemplatesUpdate, emailTemplatesDelete
 }
 
 

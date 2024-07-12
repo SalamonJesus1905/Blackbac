@@ -27,4 +27,11 @@ router.get('/users', [tokenValidation.validToken, roleValidation.roleAdmin], con
 router.put('/permission/:id', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.permission)
 
 
+//admin Email Template Management
+router.get('/emailTemplatesViews', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.emailTemplatesViews)
+router.post('/emailTemplatesCreate', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.emailTemplatesCreate)
+router.put('/emailTemplatesUpdate/:id', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.emailTemplatesUpdate)
+router.delete('/emailTemplatesDelete/:id', [tokenValidation.validToken, roleValidation.roleAdmin], controllers.adminController.emailTemplatesDelete)
+
+
 export default router;
